@@ -1,0 +1,7 @@
+*.pyc
+*.orig
+.vscode/
+dist/
+.venv
+build
+*.log
