@@ -1,2 +1,2 @@
-# Mira Mobile Testbed
+# Mari Mobile Testbed
 
