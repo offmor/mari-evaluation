@@ -1,0 +1,6 @@
+param,value
+start_time,2025-09-11T19:20:37.618025
+main_file,/home/gfedrech/Developer/inria/openswarm/dev/marilib/examples/mari_cloud.py
+mqtt_host,argus.paris.inria.fr
+mqtt_port,8883
+network_id,1010
