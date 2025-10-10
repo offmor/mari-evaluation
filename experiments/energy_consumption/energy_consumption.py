@@ -4,6 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # CONFIG
+# Raw dataset available at:
+# https://crystalfree.atlassian.net/wiki/spaces/Mari/pages/3391619079/Datasets
+
 CSV_CURRENT = "LOGS_BASE_DIR / Main current - Ace.csv"
 CSV_VOLTAGE = "LOGS_BASE_DIR / Main voltage - Ace.csv"
 CSV_POWER   = "LOGS_BASE_DIR / Main power - Ace.csv"
