@@ -8,6 +8,9 @@ from typing import Dict, List, Tuple
 import matplotlib.pyplot as plt
 
 # Configuration
+# Raw dataset available at:
+# https://crystalfree.atlassian.net/wiki/spaces/Mari/pages/3391619079/Datasets
+
 CSV_PATH = "LOGS_BASE_DIR /path/to/node_metrics.csv"
 TS_START = "2025-09-05T16:01:24.821366"
 TS_END   = "2025-09-05T16:11:23.555768"

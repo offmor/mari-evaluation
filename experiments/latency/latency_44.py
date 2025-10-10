@@ -9,6 +9,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Configuration
+# Raw dataset available at:
+# https://crystalfree.atlassian.net/wiki/spaces/Mari/pages/3391619079/Datasets
+
 CSV_PATH = "LOGS_BASE_DIR /path/to/node_metrics.csv"
 TS_START = "2025-09-05T14:51:52.313178"
 TS_END   = "2025-09-05T15:01:51.498434"

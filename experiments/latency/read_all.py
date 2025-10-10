@@ -9,6 +9,9 @@ from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 
 # Configuration
+# Raw dataset available at:
+# https://crystalfree.atlassian.net/wiki/spaces/Mari/pages/3391619079/Datasets
+
 PATHS: Dict[str, Path] = {
     "tiny":   LOGS_BASE_DIR / "path/to/latency_summary_175341_180341_idx_index_map.csv",
     "medium": LOGS_BASE_DIR / "path/to/latency_summary_145152_150151_idx_line_index_map.csv",
