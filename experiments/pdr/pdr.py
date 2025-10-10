@@ -13,6 +13,9 @@ ZOOM_Y_FIXED = (0.95, 1.01)   # y-axis range for 'fixed' mode
 ZOOM_X_WINDOW = None          # e.g., (2.0, 8.0) to limit x-axis in minutes; None for no limit
 
 # Configuration
+# Raw dataset available at:
+# https://crystalfree.atlassian.net/wiki/spaces/Mari/pages/3391619079/Datasets
+
 CONFIG = [
     {
         "label": "20 nodes",
