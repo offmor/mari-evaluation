@@ -9,14 +9,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Configuration
-CSV_PATH = "LOGS_BASE_DIR /new_medium_44_10mins_load20/node_metrics_145141.csv"
+CSV_PATH = "LOGS_BASE_DIR /path/to/node_metrics.csv"
 TS_START = "2025-09-05T14:51:52.313178"
 TS_END   = "2025-09-05T15:01:51.498434"
 
 MIN_SAMPLES      = 5    # Drop nodes with < MIN_SAMPLES samples
 ANNOTATE_TOP_K   = 5    # Annotate top-K std outliers (0 to disable)
 
-# Visual Parameters
 MARKER_SIZE      = 32   # Marker size for all points
 ALPHA            = 0.6  # Point transparency
 LINEWIDTH        = 0.4  # Marker edge width

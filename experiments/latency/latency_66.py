@@ -8,7 +8,7 @@ from typing import Dict, List, Tuple
 import matplotlib.pyplot as plt
 
 # Configuration
-CSV_PATH = "LOGS_BASE_DIR /new_huge_66_10mins_load20/node_metrics_160114.csv"
+CSV_PATH = "LOGS_BASE_DIR /path/to/node_metrics.csv"
 TS_START = "2025-09-05T16:01:24.821366"
 TS_END   = "2025-09-05T16:11:23.555768"
 

@@ -8,7 +8,7 @@ from typing import Dict, List, Tuple
 import matplotlib.pyplot as plt
 
 # Configuration
-CSV_PATH = "LOGS_BASE_DIR /new_huge_10_10mins_load20/node_metrics_171253.csv"
+CSV_PATH = "LOGS_BASE_DIR /path/to/node_metrics.csv"
 TS_START = "2025-09-05T17:13:01.377394"
 TS_END   = "2025-09-05T17:23:01.365027"
 # Plotting: nodes with fewer samples than this are excluded.

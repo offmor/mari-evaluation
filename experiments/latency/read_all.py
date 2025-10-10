@@ -8,13 +8,12 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 
-# Configuration (change your CSV paths here)
-# CSVs must contain: index,node_address,count,mean_ms,std_ms
+# Configuration
 PATHS: Dict[str, Path] = {
-    "tiny":   LOGS_BASE_DIR / "new_tiny_10_10mins_load20/latency_summary_175341_180341_idx_index_map.csv",
-    "medium": LOGS_BASE_DIR / "new_medium_44_10mins_load20/latency_summary_145152_150151_idx_line_index_map.csv",
-    "big":    LOGS_BASE_DIR / "new_big_66_10mins_load20/latency_summary_153145_154145_idx_line_index_map.csv",
-    "huge":   LOGS_BASE_DIR / "new_test_2_100/latency_summary_165658_170657_idx_line_index_map.csv",
+    "tiny":   LOGS_BASE_DIR / "path/to/latency_summary_175341_180341_idx_index_map.csv",
+    "medium": LOGS_BASE_DIR / "path/to/latency_summary_145152_150151_idx_line_index_map.csv",
+    "big":    LOGS_BASE_DIR / "path/to/latency_summary_153145_154145_idx_line_index_map.csv",
+    "huge":   LOGS_BASE_DIR / "path/to/latency_summary_165658_170657_idx_line_index_map.csv",
 }
 
 # Image and Export Settings
@@ -23,7 +22,7 @@ DPI_PNG  = 300
 SAVE_PDF = True
 X_LABEL  = "Schedule"
 Y_LABEL  = "Latency (ms)"
-TITLE    = ""           # Keep empty for papers; caption is used instead
+TITLE    = ""
 
 # Bar Chart Appearance
 BAR_WIDTH = 0.6
