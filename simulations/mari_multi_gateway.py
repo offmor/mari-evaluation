@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 # Configuration
 SCHEDULES = {
@@ -10,9 +11,29 @@ SCHEDULES = {
         "d_down": 22,
         "sf_duration": 256.88,  # ms
     },
+    6: {
+        "name": "tiny",
+        "slots": "BBB" + ("UUSDUUUUSDUUUU" * 1),
+        "max_nodes": 10,
+        "d_down": 2,
+        "sf_duration": 28.9,  # ms
+    },
+    7: {
+        "name": "tiny2",
+        "slots": "BSDUSDU",
+        "ch_offets": [0, 0, 1, 2, 3, 4, 5],
+        "max_nodes": 2,
+        "d_down": 2,
+        "sf_duration": 11.9,  # ms
+    },
 }
 
-SCHEDULE_ID        = 1
+CHANNELS_MAP = {
+    "beacon": {37, 38, 39},
+    "regular": list(range(0, 37)),
+}
+
+SCHEDULE_ID        = 7
 SLOT_WIDTH_MS      = 1.70      # slot width (paper)
 RADIO_ON_MAX_MS    = 1.02
 HALF_FRAME_MS      = 0.51      # ~128B "half-frame"
@@ -30,8 +51,9 @@ RX_LEN_MODE_GATEWAY_RX   = "fixed_full"
 # Whether all gateways share the same per-slot TX/RX "shape" (length pattern)
 TX_SAME_SHAPE_FOR_ALL = True
 
-N_CYCLES           = 100        # number of slotframe repetitions
-N_DELTA_STEPS      = 341        # δ sweep resolution (~5 µs)
+N_CYCLES           = 10        # number of slotframe repetitions
+# N_DELTA_STEPS      = 341        # δ sweep resolution (~5 µs)
+N_DELTA_STEPS      = 68        # δ sweep resolution (~25 µs)
 N_GATEWAYS         = 2          # Set N here (>=2)
 
 # k sampling:
@@ -68,6 +90,23 @@ def sample_len_ms(mode: str, rng: np.random.Generator) -> float:
         return SLOT_WIDTH_MS
     else:
         raise ValueError(f"Unknown length mode: {mode}")
+
+def build_intervals_one_cycle_with_channel_offsets(schedule_str, slot_width_ms, cells_set, len_mode, rng, channel_offsets):
+    """
+    Build intervals [start, end) for a single cycle for the cells in cells_set,
+    using the duration sampler len_mode.
+    """
+    ivs = []
+    for idx, c in enumerate(schedule_str):
+        if c in cells_set:
+            ch_offset = channel_offsets[idx]
+            start = idx * slot_width_ms
+            L = sample_len_ms(len_mode, rng)
+            end = start + L
+            ivs.append(("beacon" if c == "B" else "regular", ch_offset, start, end))
+    n_cells = len(schedule_str)
+    period_ms = n_cells * slot_width_ms
+    return ivs, n_cells, period_ms
 
 def build_intervals_one_cycle(schedule_str, slot_width_ms, cells_set, len_mode, rng):
     """
@@ -200,16 +239,28 @@ def make_other_gateways_lists(base_shapes_one_cycle, sf_period, n_cycles,
 # Main
 def main():
     rng = _randgen()
-
+    start_time = time.time()
     sch = SCHEDULES[SCHEDULE_ID]
     slots_str = sch["slots"]
     name = sch["name"]
 
     # Build ONE-CYCLE shapes for gateway 0
+    print("Building one-cycle shapes for gateway 0 TX")
     gw_tx_1c, n_cells, sf_period = build_intervals_one_cycle(
         schedule_str=slots_str, slot_width_ms=SLOT_WIDTH_MS,
         cells_set=GATEWAY_TX_CELLS, len_mode=TX_LEN_MODE_GATEWAY_TX, rng=rng
     )
+    print(f"One-cycle shapes for gateway 0 TX: {gw_tx_1c}")
+
+    # --- CH: Build ONE-CYCLE shapes for gateway 0 with channel offsets
+    print("Building one-cycle shapes for gateway 0 TX with channel offsets")
+    gw_tx_1c_ch_off, n_cells, sf_period = build_intervals_one_cycle_with_channel_offsets(
+        schedule_str=slots_str, slot_width_ms=SLOT_WIDTH_MS,
+        cells_set=GATEWAY_TX_CELLS, len_mode=TX_LEN_MODE_GATEWAY_TX, rng=rng, channel_offsets=sch["ch_offets"]
+    )
+    print(f"One-cycle shapes for gateway 0 TX with channel offsets: {gw_tx_1c_ch_off}")
+
+    print("Building one-cycle shapes for gateway 0 RX")
     gw_rx_1c, _, _ = build_intervals_one_cycle(
         schedule_str=slots_str, slot_width_ms=SLOT_WIDTH_MS,
         cells_set=UPLINK_CELLS, len_mode=RX_LEN_MODE_GATEWAY_RX, rng=rng
@@ -220,6 +271,7 @@ def main():
     base_shapes_one_cycle = {'gw_tx': gw_tx_1c, 'gw_rx': gw_rx_1c}
 
     # Precompute other gateways (0 and 2..N-1).
+    print("Building other gateways lists")
     lists_others = make_other_gateways_lists(
         base_shapes_one_cycle=base_shapes_one_cycle,
         sf_period=sf_period,
@@ -232,10 +284,13 @@ def main():
     )
 
     # Union across OTHER gateways
+    print("Union across OTHER gateways")
     union_others_gw_tx = union_of_many_interval_lists(lists_others['gw_tx'])
+    print(f"Union across OTHER gateways TX: {union_others_gw_tx}")
     union_others_gw_rx = union_of_many_interval_lists(lists_others['gw_rx'])
 
     # Prepare δ grid
+    print("Preparing δ grid")
     deltas = np.linspace(0.0, SLOT_WIDTH_MS - (SLOT_WIDTH_MS/(N_DELTA_STEPS-1)), N_DELTA_STEPS)
 
     # arrays to store averages over k for each δ
@@ -360,6 +415,8 @@ def main():
     for k,v in comp_counts.items():
         print(f"  - {k}: {v:.0f}")
     print("-" * 60)
+
+    print(f"Total simulation execution time: {time.time() - start_time:.2f} seconds")
 
     # Figures
     plt.figure(figsize=(9, 4.5))
